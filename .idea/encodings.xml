@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/assets/contactos.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aganius/contactosapp/logica/Contacto.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aganius/contactosapp/modelo/DatabaseHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aganius/contactosapp/util/XmlParser.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_action_star.png" charset="UTF-8" />
+  </component>
+</project>
