@@ -5,8 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.aganius.contactosapp.logica.Contacto;
+
+import java.util.ArrayList;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -35,9 +38,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTOS + "("
-				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NOMBRE + " TEXT,"
-				+ KEY_TELEFONO + " TEXT," + KEY_EMAIL + " TEXT,"
-				+ KEY_DIRECCION + " TEXT," + KEY_FAVORITO + " TEXT" + ")";
+				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NOMBRE + " TEXT, "
+				+ KEY_TELEFONO + " TEXT, " + KEY_EMAIL + " TEXT, "
+				+ KEY_DIRECCION + " TEXT, " + KEY_FAVORITO + " TEXT" + ")";
 		db.execSQL(CREATE_CONTACTS_TABLE);
 	}
 
@@ -69,15 +72,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_CONTACTOS, new String[] { KEY_NOMBRE,
-				KEY_TELEFONO, KEY_EMAIL, KEY_DIRECCION, KEY_FAVORITO }, KEY_ID
+				KEY_TELEFONO, KEY_EMAIL, KEY_DIRECCION, KEY_FAVORITO, KEY_ID }, KEY_ID
 				+ "=?", new String[] { String.valueOf(id) }, null, null, null,
 				null);
 		if (cursor != null)
 			cursor.moveToFirst();
 
+		assert cursor != null;
 		Contacto contacto = new Contacto(cursor.getString(0),
 				cursor.getString(1), cursor.getString(2), cursor.getString(3),
 				Boolean.parseBoolean(cursor.getString(4)));
+		contacto.setId(cursor.getInt(5));
+
+		cursor.close();
+		db.close();
 		return contacto;
 	}
 
@@ -99,7 +107,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public void deleteContact(Contacto contacto) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_CONTACTOS, KEY_ID + " = ?",
-				new String[] { String.valueOf(contacto.getId()) });
+				new String[]{String.valueOf(contacto.getId())});
 		db.close();
+	}
+
+	public ArrayList<Contacto> obtenerTodosContactos() {
+		ArrayList<Contacto> contactList = new ArrayList<>();
+		// Query para seleccionar todos los contactos.
+		String selectQuery = "SELECT * FROM " + TABLE_CONTACTOS;
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		if (cursor.moveToFirst()) {
+			do {
+				Contacto contacto = new Contacto();
+				contacto.setId(Integer.parseInt(cursor.getString(0)));
+				contacto.setNombre(cursor.getString(1));
+				contacto.setTelefono(cursor.getString(2));
+				contacto.setEmail(cursor.getString(3));
+				contacto.setDireccion(cursor.getString(4));
+				contacto.setFavorito(Boolean.parseBoolean(cursor.getString(5)));
+				// Se agrega el contacto a la lista
+				contactList.add(contacto);
+			} while (cursor.moveToNext());
+		}
+
+		cursor.close();
+
+		// return contact list
+		return contactList;
 	}
 }

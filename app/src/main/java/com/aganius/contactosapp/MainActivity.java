@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.aganius.contactosapp.logica.Contacto;
+import com.aganius.contactosapp.modelo.DatabaseHandler;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, ContactosFragment.OnFragmentInteractionListener {
@@ -115,7 +119,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
+    public void onFragmentInteraction(Contacto contacto) {
+
+        Log.i("ContactoInfo", "Id: " + contacto.getId());
+        Log.i("ContactoInfo", "Nombre: " + contacto.getNombre());
+        Log.i("ContactoInfo", "Teléfono: " + contacto.getTelefono());
+        Log.i("ContactoInfo", "Email: " + contacto.getEmail());
+        Log.i("ContactoInfo", "Dirección: " + contacto.getDireccion());
+        Log.i("ContactoInfo", "Favorito: " + contacto.getFavorito());
 
     }
 

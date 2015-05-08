@@ -4,17 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.aganius.contactosapp.dummy.ContactosContent;
 import com.aganius.contactosapp.logica.Contacto;
+import com.aganius.contactosapp.modelo.DatabaseHandler;
 import com.aganius.contactosapp.util.ContactosAdapter;
 import com.aganius.contactosapp.util.XmlParser;
-
 import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -26,8 +24,6 @@ import java.util.ArrayList;
  * interface.
  */
 public class ContactosFragment extends ListFragment {
-
-    private ArrayList<Contacto> contactos;
 
     private OnFragmentInteractionListener mListener;
 
@@ -41,30 +37,26 @@ public class ContactosFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.contactos = leerContactos(getActivity());
+        leerContactos(getActivity());
 
 
         // TODO: Change Adapter to display your content
 //        setListAdapter(new ArrayAdapter<>(getActivity(),
 //                android.R.layout.simple_list_item_1, android.R.id.text1, ContactosContent.CONTACTOS));
 
-        ContactosAdapter adapter = new ContactosAdapter(getActivity(), contactos);
+        ContactosAdapter adapter = new ContactosAdapter(getActivity());
         setListAdapter(adapter);
 
     }
 
-    private ArrayList<Contacto> leerContactos(Context context) {
-        contactos = new ArrayList<>();
+    private void leerContactos(Context context) {
         try {
-            contactos = XmlParser.parseXML(context);
-        } catch (XmlPullParserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
+            XmlParser.parseXML(context);
+
+        } catch (XmlPullParserException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return contactos;
     }
 
 
@@ -92,7 +84,14 @@ public class ContactosFragment extends ListFragment {
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(ContactosContent.CONTACTOS.get(position).getNombre());
+//            Log.d("Position", "Position: " + position + ", Size: " + ContactosContent.CONTACTOS.size());
+//            mListener.onFragmentInteraction(ContactosContent.CONTACTOS.get(position).getNombre());
+
+            DatabaseHandler databaseHandler = new DatabaseHandler(getActivity());
+            Contacto contacto = databaseHandler.buscarContacto(position + 1);
+            databaseHandler.close();
+            mListener.onFragmentInteraction(contacto);
+
         }
     }
 
@@ -108,7 +107,7 @@ public class ContactosFragment extends ListFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(String id);
+        void onFragmentInteraction(Contacto contacto);
     }
 
 }

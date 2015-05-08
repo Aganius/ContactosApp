@@ -2,7 +2,7 @@ package com.aganius.contactosapp.logica;
 
 public class Contacto {
 	
-	private String id;
+	private int id;
 	private String nombre;
 	private String telefono;
 	private String email;
@@ -125,13 +125,13 @@ public class Contacto {
 	/**
 	 * @return the id
 	 */
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	

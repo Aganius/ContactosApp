@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.aganius.contactosapp.R;
 import com.aganius.contactosapp.logica.Contacto;
+import com.aganius.contactosapp.modelo.DatabaseHandler;
 
 import java.util.ArrayList;
 
@@ -18,15 +19,19 @@ import java.util.ArrayList;
  */
 public class ContactosAdapter extends BaseAdapter {
 
-    ArrayList<Contacto> contactos = new ArrayList<Contacto>();
+    ArrayList<Contacto> contactos = new ArrayList<>();
     LayoutInflater inflater;
     Context context;
 
+    DatabaseHandler databaseHandler;
 
-    public ContactosAdapter(Context context, ArrayList<Contacto> contactos) {
-        this.contactos = contactos;
+
+    public ContactosAdapter(Context context) {
         this.context = context;
-        inflater = LayoutInflater.from(this.context);        // only context can also be used
+        this.inflater = LayoutInflater.from(this.context);        // only context can also be used
+        this.databaseHandler = new DatabaseHandler(context);
+        this.contactos = databaseHandler.obtenerTodosContactos();
+
     }
 
     @Override
@@ -56,35 +61,65 @@ public class ContactosAdapter extends BaseAdapter {
             mViewHolder = (MyViewHolder) convertView.getTag();
         }
 
-        mViewHolder.ivFavorito = detail(convertView, R.id.favorito, contactos.get(position).getFavorito());
-        mViewHolder.tvNombre = detail(convertView, R.id.nombre, contactos.get(position).getNombre());
-        mViewHolder.tvTelefono = detail(convertView, R.id.telefono, contactos.get(position).getTelefono());
-        mViewHolder.tvEmail = detail(convertView, R.id.email, contactos.get(position).getEmail());
+        mViewHolder.setIvFavorito(detail(convertView, R.id.favorito, contactos.get(position).getFavorito()));
+        mViewHolder.setTvNombre(detail(convertView, R.id.nombre, contactos.get(position).getNombre()));
+        mViewHolder.setTvTelefono(detail(convertView, R.id.telefono, contactos.get(position).getTelefono()));
+        mViewHolder.setTvEmail(detail(convertView, R.id.email, contactos.get(position).getEmail()));
 
         return convertView;
     }
 
-    // or you can try better way
     private TextView detail(View v, int resId, String text) {
         TextView tv = (TextView) v.findViewById(resId);
         tv.setText(text);
         return tv;
     }
 
-    private ImageView detail(View v, int resId, Boolean icon) {
+    private ImageView detail(View v, int resId, Boolean favorito) {
         ImageView iv = (ImageView) v.findViewById(resId);
-        iv.setImageResource(R.drawable.ic_action_star); //
+        iv.setImageResource(R.drawable.ic_action_star);
 
         return iv;
     }
 
     private class MyViewHolder {
-        ImageView ivFavorito;
-        TextView tvNombre;
-        TextView tvTelefono;
-        TextView tvEmail;
+        private ImageView ivFavorito;
+        private TextView tvNombre;
+        private TextView tvTelefono;
+        private TextView tvEmail;
 
 
+        public ImageView getIvFavorito() {
+            return ivFavorito;
+        }
+
+        public void setIvFavorito(ImageView ivFavorito) {
+            this.ivFavorito = ivFavorito;
+        }
+
+        public TextView getTvNombre() {
+            return tvNombre;
+        }
+
+        public void setTvNombre(TextView tvNombre) {
+            this.tvNombre = tvNombre;
+        }
+
+        public TextView getTvTelefono() {
+            return tvTelefono;
+        }
+
+        public void setTvTelefono(TextView tvTelefono) {
+            this.tvTelefono = tvTelefono;
+        }
+
+        public TextView getTvEmail() {
+            return tvEmail;
+        }
+
+        public void setTvEmail(TextView tvEmail) {
+            this.tvEmail = tvEmail;
+        }
     }
 
 }

@@ -4,6 +4,7 @@ package com.aganius.contactosapp.util;
 import android.content.Context;
 
 import com.aganius.contactosapp.logica.Contacto;
+import com.aganius.contactosapp.modelo.DatabaseHandler;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -11,11 +12,10 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 public class XmlParser {
 
-	public static ArrayList<Contacto> parseXML(Context applicationContext)
+	public static void parseXML(Context applicationContext)
 			throws XmlPullParserException, IOException {
 
 		XmlPullParserFactory pullParserFactory;
@@ -29,53 +29,61 @@ public class XmlParser {
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			parser.setInput(is, null);
 
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (XmlPullParserException | IOException e) {
 			e.printStackTrace();
 		}
 
-		ArrayList<Contacto> contactos = null;
 		int eventType = parser.getEventType();
 		Contacto contactoActual = null;
+
+		applicationContext.deleteDatabase("agenda_contactos");
+
+		DatabaseHandler databaseHandler = new DatabaseHandler(applicationContext);
 
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			String name = null;
 			switch (eventType) {
 			case XmlPullParser.START_DOCUMENT:
-				contactos = new ArrayList<Contacto>();
 				break;
 			case XmlPullParser.START_TAG:
 				name = parser.getName();
 				if (name.equals("contacto")) {
 					contactoActual = new Contacto();
 				} else if (contactoActual != null) {
-					if (name.equals("nombre")) {
-						contactoActual.setNombre(parser.nextText());
-//						Log.i("XML", contactoActual.getNombre());
-					} else if (name.equals("telefono")) {
-						contactoActual.setTelefono(parser.nextText());
-//						Log.i("XML", contactoActual.getTelefono());
-					} else if (name.equals("email")) {
-						contactoActual.setEmail(parser.nextText());
-//						Log.i("XML", contactoActual.getEmail());
-					} else if (name.equals("direccion")) {
-						contactoActual.setDireccion(parser.nextText());
-//						Log.i("XML", contactoActual.getDireccion());
+					switch (name) {
+						case "nombre":
+							contactoActual.setNombre(parser.nextText());
+							break;
+						case "telefono":
+							contactoActual.setTelefono(parser.nextText());
+							break;
+						case "email":
+							contactoActual.setEmail(parser.nextText());
+							break;
+						case "direccion":
+							contactoActual.setDireccion(parser.nextText());
+							break;
 					}
 				}
 				break;
 			case XmlPullParser.END_TAG:
 				name = parser.getName();
 				if (name.equalsIgnoreCase("contacto") && contactoActual != null) {
-					contactos.add(contactoActual);
+
+					if (!contactoActual.getNombre().isEmpty() ||
+							!contactoActual.getTelefono().isEmpty() ||
+							!contactoActual.getEmail().isEmpty() ||
+							!contactoActual.getDireccion().isEmpty()) {
+						contactoActual.setFavorito(false);
+						databaseHandler.agregarContacto(contactoActual);
+					}
+
 				}
 			}
 			eventType = parser.next();
 		}
 
-		return contactos;
+		databaseHandler.close();
 
 	}
 
