@@ -4,17 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import com.aganius.contactosapp.dummy.ContactosContent;
 import com.aganius.contactosapp.logica.Contacto;
 import com.aganius.contactosapp.modelo.DatabaseHandler;
 import com.aganius.contactosapp.util.ContactosAdapter;
 import com.aganius.contactosapp.util.XmlParser;
 import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.

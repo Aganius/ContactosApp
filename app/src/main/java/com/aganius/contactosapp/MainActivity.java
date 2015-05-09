@@ -130,16 +130,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     }
 
-    public void marcarFavorito(View view) {
-
-        ImageView favorito = (ImageView) view.findViewById(R.id.favorito);
-
-        favorito.setColorFilter(Color.YELLOW);
-
-        Toast.makeText(this, "Favorito", Toast.LENGTH_SHORT).show();
-
-    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.

@@ -1,6 +1,7 @@
 package com.aganius.contactosapp.util;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class ContactosAdapter extends BaseAdapter {
 
     public ContactosAdapter(Context context) {
         this.context = context;
-        this.inflater = LayoutInflater.from(this.context);        // only context can also be used
+        this.inflater = LayoutInflater.from(this.context);
         this.databaseHandler = new DatabaseHandler(context);
         this.contactos = databaseHandler.obtenerTodosContactos();
 
@@ -66,6 +67,17 @@ public class ContactosAdapter extends BaseAdapter {
         mViewHolder.setTvTelefono(detail(convertView, R.id.telefono, contactos.get(position).getTelefono()));
         mViewHolder.setTvEmail(detail(convertView, R.id.email, contactos.get(position).getEmail()));
 
+        convertView.setId(contactos.get(position).getId());
+
+        ImageView favorito = (ImageView) convertView.findViewById(R.id.favorito);
+
+        favorito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ImageView) v.findViewById(R.id.favorito)).setColorFilter(Color.YELLOW);
+            }
+        });
+
         return convertView;
     }
 
@@ -87,7 +99,6 @@ public class ContactosAdapter extends BaseAdapter {
         private TextView tvNombre;
         private TextView tvTelefono;
         private TextView tvEmail;
-
 
         public ImageView getIvFavorito() {
             return ivFavorito;
