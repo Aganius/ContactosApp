@@ -1,7 +1,6 @@
 package com.aganius.contactosapp;
 
 import java.util.Locale;
-import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -16,11 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.aganius.contactosapp.logica.Contacto;
-import com.aganius.contactosapp.modelo.DatabaseHandler;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, ContactosFragment.OnFragmentInteractionListener {

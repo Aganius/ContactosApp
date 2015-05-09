@@ -1,17 +1,18 @@
 package com.aganius.contactosapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.aganius.contactosapp.logica.Contacto;
 import com.aganius.contactosapp.modelo.DatabaseHandler;
 import com.aganius.contactosapp.util.ContactosAdapter;
-import com.aganius.contactosapp.util.XmlParser;
-import org.xmlpull.v1.XmlPullParserException;
-import java.io.IOException;
 
 /**
  * A fragment representing a list of Items.
@@ -32,28 +33,18 @@ public class ContactosFragment extends ListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        leerContactos(getActivity());
-
-
-        // TODO: Change Adapter to display your content
-//        setListAdapter(new ArrayAdapter<>(getActivity(),
-//                android.R.layout.simple_list_item_1, android.R.id.text1, ContactosContent.CONTACTOS));
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_contactos,
+                container, false);
 
         ContactosAdapter adapter = new ContactosAdapter(getActivity());
-        setListAdapter(adapter);
 
-    }
+        ListView listView = (ListView) rootView
+                .findViewById(android.R.id.list);
+        listView.setAdapter(adapter);
 
-    private void leerContactos(Context context) {
-        try {
-            XmlParser.parseXML(context);
-
-        } catch (XmlPullParserException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        return rootView;
     }
 
 
@@ -88,6 +79,7 @@ public class ContactosFragment extends ListFragment {
             Contacto contacto = databaseHandler.buscarContacto(position + 1);
             databaseHandler.close();
             mListener.onFragmentInteraction(contacto);
+            Toast.makeText(getActivity(), contacto.getNombre(), Toast.LENGTH_SHORT).show();
 
         }
     }
